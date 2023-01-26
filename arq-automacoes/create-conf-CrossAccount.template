@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This cloudformation template will create a managed policy allowing access to Lambda for List Fn, and List Tag requests"
+
+#####################
+# Define Resources
+#####################
+Resources: 
+  # ---------------------
+  # Define Policy Resource
+  # ---------------------
+ 
+
+  
+
+  CrossAccountAdmin: 
+      Type: "AWS::IAM::Role"
+      Properties: 
+        RoleName: "CrossAccountAdmin"
+        AssumeRolePolicyDocument: 
+          Statement: 
+            -
+              Effect: "Allow"
+              Action: sts:AssumeRole
+              
+              "Principal": 
+                "AWS": "arn:aws:iam::766581111222:root"
+            
+          
+          
+          "Version": "2012-10-17"
+        
+        Path: "/"
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/AdministratorAccess"
+        ]
+      
+    
+  CrossAccountSignin: 
+      Type: "AWS::IAM::Role"
+      Properties: 
+        RoleName: "CrossAccountSignin"
+        AssumeRolePolicyDocument:
+          Statement:
+            - 
+              Effect: "Allow"
+              Action: "sts:AssumeRole"
+              
+              "Principal": 
+                "AWS": "arn:aws:iam::766581111222:root"
+                      
+          
+          "Version": "2012-10-17"
+        
+        Path: "/"
+        ManagedPolicyArns: [
+          "arn:aws:iam::aws:policy/ReadOnlyAccess",
+          "arn:aws:iam::aws:policy/AWSSupportAccess"
+        ]
+  
+  CrossAccountBilling: 
+      Type: "AWS::IAM::Role"
+      Properties: 
+        RoleName: "CrossAccountBilling"
+        AssumeRolePolicyDocument:
+          Statement:
+            - 
+              Effect: "Allow"
+              Action: "sts:AssumeRole"
+              
+              "Principal": 
+                "AWS": "arn:aws:iam::766581111222:root"
+                      
+          
+          "Version": "2012-10-17"
+        
+        Path: "/"
+        ManagedPolicyArns: [
+          "arn:aws:iam::aws:policy/job-function/Billing"
+        ]
+      
+    
+
+
+ 
+ 

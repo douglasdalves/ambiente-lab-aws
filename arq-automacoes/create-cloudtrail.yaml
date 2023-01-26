@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources: 
+
+
+    Buckettrail: 
+      DeletionPolicy: Retain
+      Type: AWS::S3::Bucket
+      Properties: {}
+    BucketPolicy: 
+      Type: AWS::S3::BucketPolicy
+      Properties: 
+        Bucket: 
+          Ref: Buckettrail 
+        PolicyDocument: 
+          Version: "2012-10-17"
+          Statement: 
+            - 
+              Sid: "AWSCloudTrailAclCheck"
+              Effect: "Allow"
+              Principal: 
+                Service: "cloudtrail.amazonaws.com"
+              Action: "s3:GetBucketAcl"
+              Resource: 
+                !Sub |-
+                  arn:aws:s3:::${Buckettrail}
+            - 
+              Sid: "AWSCloudTrailWrite"
+              Effect: "Allow"
+              Principal: 
+                Service: "cloudtrail.amazonaws.com"
+              Action: "s3:PutObject"
+              Resource:
+                !Sub |-
+                  arn:aws:s3:::${Buckettrail}/AWSLogs/${AWS::AccountId}/*
+              Condition: 
+                StringEquals:
+                  s3:x-amz-acl: "bucket-owner-full-control"
+
+
+       
+    myTrail: 
+      DependsOn: 
+        - BucketPolicy        
+      Type: AWS::CloudTrail::Trail
+      Properties: 
+        S3BucketName: !Ref Buckettrail      
+        IsLogging: true
+
+Outputs:
+  Buckettrail:
+    Description: The name S3 created.
+    Value: !Ref Buckettrail
+  myTrail:
+    Description: The name of the CloudTrail 
+    Value: !Ref myTrail

@@ -1,0 +1,140 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This cloudformation template will create a managed policy allowing access to Lambda for List Fn, and List Tag requests"
+
+#####################
+# Define Resources
+#####################
+Resources: 
+  # ---------------------
+  # Define Policy Resource
+  # ---------------------
+
+ 
+  
+  ManagedPolicy:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties: 
+      ManagedPolicyName: "SupportDeny"
+      Description: "SupportDeny"
+      Path: "/"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Effect: "Deny"
+            Action: 
+              - "Support:*"              
+            Resource: "*"
+
+  BillingDenyPolicy:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties: 
+      ManagedPolicyName: "BillingDenyPolicy"
+      Description: "BillingDenyPolicy"
+      Path: "/"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Effect: "Deny"
+            Action: 
+              - "ce:*"
+              - "aws-portal:*"
+              - "organizations:*"
+              - "Support:*"
+              - "pricing:*"
+              - "budgets:*"
+              - "cur:*"              
+            Resource: "*"
+
+  ManagedGroup:
+    Type: AWS::IAM::Group
+    Properties: 
+      GroupName: Admin
+      ManagedPolicyArns: 
+      - arn:aws:iam::aws:policy/AdministratorAccess
+      - !Ref ManagedPolicy
+      - !Ref BillingDenyPolicy
+
+  CrossAccountAdmin: 
+      Type: "AWS::IAM::Role"
+      Properties: 
+        RoleName: "CrossAccountAdmin"
+        AssumeRolePolicyDocument: 
+          Statement: 
+            -
+              Effect: "Allow"
+              Action: sts:AssumeRole
+              
+              "Principal": 
+                "AWS": "arn:aws:iam::766581111222:root"
+            
+          
+          
+          "Version": "2012-10-17"
+        
+        Path: "/"
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/AdministratorAccess"
+        ]
+      
+    
+  CrossAccountSignin: 
+      Type: "AWS::IAM::Role"
+      Properties: 
+        RoleName: "CrossAccountSignin"
+        AssumeRolePolicyDocument:
+          Statement:
+            - 
+              Effect: "Allow"
+              Action: "sts:AssumeRole"
+              
+              "Principal": 
+                "AWS": "arn:aws:iam::766581111222:root"
+                      
+          
+          "Version": "2012-10-17"
+        
+        Path: "/"
+        ManagedPolicyArns: [
+          "arn:aws:iam::aws:policy/ReadOnlyAccess",
+          "arn:aws:iam::aws:policy/AWSSupportAccess"
+        ]
+  
+  CrossAccountBilling: 
+      Type: "AWS::IAM::Role"
+      Properties: 
+        RoleName: "CrossAccountBilling"
+        AssumeRolePolicyDocument:
+          Statement:
+            - 
+              Effect: "Allow"
+              Action: "sts:AssumeRole"
+              
+              "Principal": 
+                "AWS": "arn:aws:iam::766581111222:root"
+                      
+          
+          "Version": "2012-10-17"
+        
+        Path: "/"
+        ManagedPolicyArns: [
+          "arn:aws:iam::aws:policy/job-function/Billing"
+        ]
+      
+    
+
+#####################
+# Define Outputs:
+#####################
+Outputs:
+  PolicyName:
+    Description: The name of the newly created managed policy
+    Value: !Ref ManagedPolicy
+  GroupName:
+    Description: The name of the Group 
+    Value: !Ref ManagedGroup
+  ManagedPolicyName:
+    Description: The name of the Group 
+    Value: !Ref BillingDenyPolicy
+ 
