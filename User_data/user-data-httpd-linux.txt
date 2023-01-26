@@ -1,0 +1,15 @@
+#!/bin/bash
+yum update -y
+yum install httpd -y
+service httpd start
+chkconfig httpd on
+cd /var/www/html
+echo "<!doctype html>
+<html>
+  <head>
+    <title>Webserver</title>
+  </head>
+  <body>
+    <p>WEB SERVER IS <strong>LIVE</strong></p>
+  </body>
+</html>" > index.html
