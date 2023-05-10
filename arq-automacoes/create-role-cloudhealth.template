@@ -9,7 +9,7 @@ Resources:
   CHRole:
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: compasso-mgmt-cost
+      RoleName: mgmt-cost
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -19,10 +19,10 @@ Resources:
                 'sts:ExternalId': !Ref ExternalId
             Effect: Allow
             Principal:
-              AWS: 'arn:aws:iam::454464851268:root'
+              AWS: 'arn:aws:iam::id:root'
       Path: /
       Policies:
-        - PolicyName: compasso-mgmt-cost
+        - PolicyName: mgmt-cost
           PolicyDocument:
             Version: 2012-10-17
             Statement:
