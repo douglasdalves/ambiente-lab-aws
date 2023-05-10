@@ -23,7 +23,7 @@ Resources:
               Action: sts:AssumeRole
               
               "Principal": 
-                "AWS": "arn:aws:iam::766581111222:root"
+                "AWS": "arn:aws:iam::id:root"
             
           
           
@@ -46,7 +46,7 @@ Resources:
               Action: "sts:AssumeRole"
               
               "Principal": 
-                "AWS": "arn:aws:iam::766581111222:root"
+                "AWS": "arn:aws:iam::id:root"
                       
           
           "Version": "2012-10-17"
@@ -68,7 +68,7 @@ Resources:
               Action: "sts:AssumeRole"
               
               "Principal": 
-                "AWS": "arn:aws:iam::766581111222:root"
+                "AWS": "arn:aws:iam::id:root"
                       
           
           "Version": "2012-10-17"
